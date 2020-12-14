@@ -1,4 +1,3 @@
-import os
 import numpy as np
 
 with open("data/day5.txt", "r") as f:
