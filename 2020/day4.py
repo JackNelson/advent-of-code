@@ -104,6 +104,10 @@ for i in data:
     for k, v in i.items():
         if k in fields:
 
+            # use for part a
+            # fields.remove(k)
+
+            # use for part b
             if verify_func[k](v):
                 fields.remove(k)
 
