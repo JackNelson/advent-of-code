@@ -1,6 +1,7 @@
 from typing import List
 from string import ascii_lowercase, ascii_uppercase
 from utils.io import read_input
+from utils.compare import get_intersection
 
 def get_bag_priority(contents: str) -> int:
     
@@ -17,7 +18,7 @@ def get_badge_priority(bags: List[str]) -> int:
 
     global items
 
-    return items.index(list(set.intersection(*map(set, bags)))[0]) + 1
+    return items.index(get_intersection(bags)[0]) + 1
 
 items = list(ascii_lowercase) + list(ascii_uppercase)
 data = read_input(day=3)
