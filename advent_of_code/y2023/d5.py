@@ -17,10 +17,17 @@ class GardenMapLine:
     def shift_value(self) -> int:
         return self.from_n - self.to_n
 
-    def map_value(self, n: int) -> int:
+    def map_value(self, n: int, backwards: bool = False) -> int:
 
-        if (n >= self.from_n) and (n <= self.from_n + self.range_n):
-            return self.to_n + (n - self.from_n)
+        if backwards:
+            start = self.to_n
+            end = self.from_n
+        else:
+            start = self.from_n
+            end = self.to_n
+
+        if (n >= start) and (n <= start + self.range_n):
+            return end + (n - start)
 
         else:
             return n
@@ -32,13 +39,18 @@ class GardenMap:
     to_cat: str
     map_lines: List[GardenMapLine]
 
-    def get_map_line(self, n: int) -> GardenMapLine:
+    def get_map_line(self, n: int, backwards: bool = False) -> GardenMapLine:
 
         tmp = self.map_lines[0]
 
-        for map_line in sorted(self.map_lines, key=lambda x: x.from_n):
+        if backwards:
+            sort_key = "to_n"
+        else:
+            sort_key = "from_n"
 
-            if n >= map_line.from_n:
+        for map_line in sorted(self.map_lines, key=lambda x: getattr(x, sort_key)):
+
+            if n >= getattr(map_line, sort_key):
                 tmp = map_line
             else:
                 break
@@ -65,27 +77,49 @@ def group_lines(lines: List[Any]) -> Any:
         if not key
     ]
 
+
 def get_location_value(
-        garden_maps: List[GardenMap],
-        n: int,
-        from_cat: str = "seed",
-    ) -> int:
+    garden_maps: List[GardenMap],
+    n: int,
+    from_cat: str = "seed",
+) -> int:
 
-        v = n
+    v = n
 
-        if from_cat != "location":
+    if from_cat != "location":
 
-            gm = [gm for gm in garden_maps if gm.from_cat == from_cat][0]
-            new_n = gm.get_map_line(n=n).map_value(n)
+        gm = [gm for gm in garden_maps if gm.from_cat == from_cat][0]
+        new_n = gm.get_map_line(n=n).map_value(n)
 
-            v = get_location_value(
-                garden_maps=garden_maps,
-                n=new_n,
-                from_cat=gm.to_cat,
-            )
+        v = get_location_value(
+            garden_maps=garden_maps,
+            n=new_n,
+            from_cat=gm.to_cat,
+        )
 
-        return v
+    return v
 
+
+def get_seed_value(
+    garden_maps: List[GardenMap],
+    n: int,
+    to_cat: str = "location",
+) -> int:
+
+    v = n
+
+    if to_cat != "seed":
+
+        gm = [gm for gm in garden_maps if gm.to_cat == to_cat][0]
+        new_n = gm.get_map_line(n=n, backwards=True).map_value(n, backwards=True)
+
+        v = get_seed_value(
+            garden_maps=garden_maps,
+            n=new_n,
+            to_cat=gm.from_cat,
+        )
+
+    return v
 
 def main(test: bool, part: int = None) -> None:
 
@@ -121,23 +155,30 @@ def main(test: bool, part: int = None) -> None:
         for group in data[1:]
     ]
 
-    ans_part1 = min([
-        get_location_value(garden_maps=garden_maps, n=seed)
-        for seed in seeds
-    ])
+    if part != "2":
+        ans_part1 = min([
+            get_location_value(garden_maps=garden_maps, n=seed)
+            for seed in seeds
+        ])
+
+    if part != "1":
+
+        ans_part2 = ans_part1 # HACK
+        ans_found = False
+
+        while True:
+
+            test_val = get_seed_value(garden_maps=garden_maps, n=ans_part2)
+
+            for start_n, range_n in [(seeds[i], seeds[i+1]) for i in np.arange(0, len(seeds), 2)]:
+                if start_n <= test_val and test_val < (start_n + range_n):
+                    ans_found = True
+
+            if ans_found:
+                break
+
+            ans_part2 += 1
 
     print(f"AOC 2023 - Day 5")
     print(f"    Part 1: {ans_part1}")
-    # print(f"    Part 2: {ans_part2}")
-
-    # for gm in garden_maps:
-        # lowest_shift = sorted(gm.map_lines, key=lambda x: x.shift_value())[0].shift_value()
-        # print(lowest_shift)
-
-    for start_n, range_n in [(seeds[i], seeds[i+1]) for i in np.arange(0, len(seeds), 2)]:
-        print(f"range: {start_n}-{start_n+range_n}")
-        tmp = min([
-            get_location_value(garden_maps=garden_maps, n=seed)
-            for seed in np.arange(start_n, start_n+range_n)
-        ])
-        print(tmp)
+    print(f"    Part 2: {ans_part2}")
