@@ -1,3 +1,4 @@
 2021/data/test.txt
 **/__pycache__/**
 .venv
+data/

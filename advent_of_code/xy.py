@@ -1,6 +1,31 @@
 from typing import Any, List, Tuple
+from dataclasses import dataclass
 import numpy as np
 import operator
+
+
+@dataclass
+class Point2D:
+    i: int
+    j: int
+
+    def __add__(self, other):
+        return Point2D(i=self.i+other.i, j=self.j+other.j)
+
+
+    def __sub__(self, other):
+        return Point2D(i=self.i-other.i, j=self.j-other.j)
+
+
+    def __eq__(self, other):
+        return self.i == other.i and self.j == other.j
+
+
+@dataclass
+class Vector2D:
+    a: Point2D
+    b: Point2D
+
 
 def get_grid(points: List[Tuple[int, int]], fill_value: Any) -> np.array:
 

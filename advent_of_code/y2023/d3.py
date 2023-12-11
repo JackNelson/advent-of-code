@@ -6,18 +6,7 @@ import re
 import numpy as np
 
 from advent_of_code.io import read_input
-
-
-@dataclass
-class Point2D:
-    i: int
-    j: int
-
-
-@dataclass
-class Vector2D:
-    a: Point2D
-    b: Point2D
+from advent_of_code.xy import Point2D, Vector2D
 
 
 @dataclass
