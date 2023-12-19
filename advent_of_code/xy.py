@@ -21,6 +21,10 @@ class Point2D:
         return self.i == other.i and self.j == other.j
 
 
+    def __iter__(self):
+        yield from [self.i, self.j]
+
+
 @dataclass
 class Vector2D:
     a: Point2D
