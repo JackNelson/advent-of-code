@@ -2,6 +2,8 @@ from typing import Any, List, Tuple
 from dataclasses import dataclass
 import numpy as np
 import operator
+import hashlib
+import json
 
 
 @dataclass
@@ -65,3 +67,37 @@ def manhattan_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> int:
         abs(x_distance(point1=point1, point2=point2)) +
         abs(y_distance(point1=point1, point2=point2))
     )
+
+
+def get_adjacent_point(p: Point2D, dir: str, grid: np.array = None) -> Point2D:
+
+    d_dict = {
+        "N": Point2D(i=-1, j=0),
+        "S": Point2D(i=1, j=0),
+        "E": Point2D(i=0, j=1),
+        "W": Point2D(i=0, j=-1),
+    }
+
+    adj_p = p + d_dict[dir]
+
+    if not grid is None:
+        if (
+            adj_p.i < 0
+            or adj_p.i >= grid.shape[0]
+            or adj_p.j < 0
+            or adj_p.j >= grid.shape[1]
+        ):
+            return None
+
+    return adj_p
+
+
+def get_adjacent_value(p: Point2D, dir: str, grid: np.array) -> Any:
+
+    adj_p = get_adjacent_point(p=p, dir=dir, grid=grid)
+
+    if adj_p:
+        return grid[adj_p.i, adj_p.j]
+
+    else:
+        return None

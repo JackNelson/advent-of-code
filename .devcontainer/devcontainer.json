@@ -10,14 +10,18 @@
 			"settings": {
 				"python.terminal.activateEnvInCurrentTerminal": true,
 				"files.autoSave": "afterDelay",
-				"autoDocstring.docstringFormat": "numpy"
+				"autoDocstring.docstringFormat": "numpy",
+				"[python]": {
+					"editor.defaultFormatter": "ms-python.black-formatter"
+				}
 			},
 			"extensions": [
 				"ms-azuretools.vscode-docker",
 				"ms-python.python",
 				"njwerner.autodocstring",
 				"shardulm94.trailing-spaces",
-				"tamasfe.even-better-toml"
+				"tamasfe.even-better-toml",
+				"ms-python.black-formatter"
 			]
 		}
 	}
