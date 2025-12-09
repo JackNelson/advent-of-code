@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "advent_of_code"
+version = "0.0.0"
+description = "TBD"
+authors = ["JackNelson"]
+license = "MIT License"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.12"
+numpy = "*"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+autoflake = "*"
+pytkdocs = {version = "*", extras=["numpy-style"]}
+toml = "*"
+pre-commit = "*"
+pytest = "*"
+pytest-timeout = "*"
+
+[tool.poetry.scripts]
+aoc = "advent_of_code.cmd:main"
+y2023_d1 = "advent_of_code.y2023.d1:main"
+y2023_d2 = "advent_of_code.y2023.d2:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
